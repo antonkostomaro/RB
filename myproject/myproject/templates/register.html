@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #ff6347, #ff4500, #6a5acd, #1e1e78);
+            background-size: 300% 300%;
+            animation: gradientAnimation 15s ease infinite;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .registration-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            z-index: 1; /* Чтобы форма была над фоном */
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #fff;
+            color: #ff6347;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #ff4500;
+            color: white;
+        }
+
+        a {
+            display: block;
+            margin-top: 10px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .food {
+            position: absolute;
+            width: 50px; /* Ширина изображения */
+            animation: fly 10s linear infinite;
+            opacity: 0; /* Изначально скрыто */
+            pointer-events: none; /* Игнорировать события мыши */
+        }
+
+        @keyframes fly {
+            0% {
+                transform: translateY(-150px) translateX(0); /* Начальная позиция выше экрана */
+                opacity: 0; /* Скрыто */
+            }
+            20% {
+                opacity: 1; /* Появляется */
+            }
+            100% {
+                transform: translateY(100vh) translateX(calc(100vw - 50px)); /* Конечная позиция внизу экрана */
+                opacity: 0; /* Исчезает внизу */
+            }
+        }
+
+        /* Разные позиции и анимации для каждого элемента еды */
+        .food:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .food:nth-child(2) {
+            left: 20%;
+            animation-delay: 2s;
+        }
+
+        .food:nth-child(3) {
+            left: 30%;
+            animation-delay: 4s;
+        }
+
+        .food:nth-child(4) {
+            left: 40%;
+            animation-delay: 6s;
+        }
+
+        .food:nth-child(5) {
+            left: 50%;
+            animation-delay: 8s;
+        }
+    </style>
+</head>
+<body>
+    {% load static %}
+    <div class="registration-container">
+        <h2><i class="fas fa-user-plus"></i> Регистрация</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Имя пользователя" required>
+            <div style="display: flex; justify-content: space-between;">
+                <input type="password" name="password" placeholder="Пароль" required style="width: 48%;">
+                <input type="password" name="confirm_password" placeholder="Подтвердите пароль" required style="width: 48%;">
+            </div>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <a href="{% url 'login' %}">Уже есть аккаунт? Войти</a>
+    </div>
+
+    <img src="{% static 'images/1.gif' %}" class="food" alt="Еда 1">
+    <img src="{% static 'images/17.webp' %}" class="food" alt="Еда 2">
+    <img src="{% static 'images/14.webp' %}" class="food" alt="Еда 3">
+    <img src="{% static 'images/15.webp' %}" class="food" alt="Еда 4">
+    <img src="{% static 'images/16.webp' %}" class="food" alt="Еда 5">
+</body>
+</html>

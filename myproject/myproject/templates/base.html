@@ -1,0 +1,275 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- Обязательные мета-теги -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap, иконки и шрифт -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700&display=swap' rel='stylesheet' type='text/css'>   
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- Анимации -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.css" />
+
+    {% if title %}
+        <title>Кулинарный блог {{ title }}</title>
+    {% else %}
+        <title>Кулинарный блог Python Bytes</title>
+    {% endif %}
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef); /* Градиент фона */
+            color: #333; /* Темный текст для контраста */
+            height: 100vh;
+            margin: 0;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #1c1c1c; /* Темно-серый */
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+        }
+        .sidebar .nav-link {
+            color: #ffffff;
+            border: 1px solid transparent; /* Прозрачная граница */
+            border-radius: 20px; /* Округленные углы */
+            padding: 10px 15px;
+            transition: color 0.3s, border-color 0.3s;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+        .sidebar .nav-link:hover {
+            color: #ffc107; /* Цвет при наведении */
+            border-color: #ffc107; /* Золотистая обводка */
+        }
+        .dropdown-menu {
+            background-color: #2c2c2c; /* Темный фон для выпадающего меню */
+            border-radius: 5px;
+        }
+        .dropdown-item {
+            color: #ffffff;
+        }
+        .dropdown-item:hover {
+            background-color: #ffc107; /* Цвет при наведении */
+            color: #1c1c1c; /* Темный текст при наведении */
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            flex-grow: 1;
+            padding-bottom: 60px; /* Учитываем высоту футера */
+        }
+        .profile {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            width: 500px; /* Увеличиваем ширину поля поиска */
+            border-radius: 25px;
+            border: 1px solid #ccc;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #2c2c2c; /* Темный фон для поля поиска */
+            color: #ffffff; /* Белый текст */
+        }
+        .search-bar button {
+            border-radius: 25px;
+            background-color: #333; /* Черный цвет кнопки */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .search-bar button:hover {
+            background-color: #444; /* Темно-серый цвет при наведении */
+        }
+        footer {
+            background-color: #1c1c1c; /* Темно-серый */
+            color: #ffffff;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            .dropdown-menu {
+                max-height: 400px; /* Ограничим высоту выпадающего меню */
+                overflow-y: auto;  /* Добавим прокрутку, если будет много категорий */
+                background-color: #f8f9fa; /* Светло-серый фон */
+            }
+            .dropdown-item {
+                color: #343a40; /* Темный цвет текста */
+                font-size: 16px; /* Размер текста */
+                padding: 10px 15px;
+            }
+            .dropdown-item:hover {
+                background-color: #ffc107; /* Золотистый цвет при наведении */
+                color: white; /* Белый текст при наведении */
+            }
+            .navbar-nav {
+                flex-direction: row;
+            }
+            .nav-item {
+                margin-right: 15px;
+            }
+            .nav-link {
+                color: #343a40; /* Темный цвет текста для ссылок */
+            }
+            .nav-link:hover {
+                color: #ffc107; /* Золотистый цвет текста при наведении */
+            }
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2 class="text-light">Навигация</h2>
+        <div class="nav flex-column">
+            <a class="nav-link" href="{% url 'home' %}"><i class='bx bxs-home'></i>Главная</a>
+            <a class="nav-link" href="{% url 'about' %}"><i class='bx bx-info-circle'></i>О блоге</a>
+
+            <!-- Выпадающее меню для категорий блюд -->
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class='bx bx-food-menu'></i>Категории блюд
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style="max-height: 300px; overflow-y: auto; position: relative;">
+                    <a class="dropdown-item" href="#">Завтраки</a>
+                    <a class="dropdown-item" href="#">Закуски</a>
+                    <a class="dropdown-item" href="#">Салаты</a>
+                    <a class="dropdown-item" href="#">Супы</a>
+                    <a class="dropdown-item" href="#">Гарниры</a>
+                    <a class="dropdown-item" href="#">Пасты</a>
+                    <a class="dropdown-item" href="#">Основные блюда</a>
+                    <a class="dropdown-item" href="#">Мясные блюда</a>
+                    <a class="dropdown-item" href="#">Рыбные блюда</a>
+                    <a class="dropdown-item" href="#">Вегетарианские блюда</a>
+                    <a class="dropdown-item" href="#">Веганские блюда</a>
+                    <a class="dropdown-item" href="#">Птица</a>
+                    <a class="dropdown-item" href="#">Блюда из яиц</a>
+                    <a class="dropdown-item" href="#">Блюда из картофеля</a>
+                    <a class="dropdown-item" href="#">Блюда на гриле</a>
+                    <a class="dropdown-item" href="#">Торты и пироги</a>
+                    <a class="dropdown-item" href="#">Печенье и кексы</a>
+                    <a class="dropdown-item" href="#">Десерты</a>
+                    <a class="dropdown-item" href="#">Напитки</a>
+                    <a class="dropdown-item" href="#">Коктейли</a>
+                    <a class="dropdown-item" href="#">Соусы</a>
+                    <a class="dropdown-item" href="#">Маринады</a>
+                    <a class="dropdown-item" href="#">Консервация</a>
+                    <a class="dropdown-item" href="#">Рождественские блюда</a>
+                    <a class="dropdown-item" href="#">Пасхальные блюда</a>
+                    <a class="dropdown-item" href="#">Зимние блюда</a>
+                    <a class="dropdown-item" href="#">Летние блюда</a>
+                    <a class="dropdown-item" href="#">Рецепты для детей</a>
+                    <a class="dropdown-item" href="#">Диетические блюда</a>
+                    <a class="dropdown-item" href="#">Низкоуглеводные блюда</a>
+                    <a class="dropdown-item" href="#">Безглютеновые блюда</a>
+                    <a class="dropdown-item" href="#">Праздничные блюда</a>
+                    <a class="dropdown-item" href="#">Быстрые рецепты</a>
+                    <a class="dropdown-item" href="#">Медленные рецепты (мультиварка)</a>
+                    <a class="dropdown-item" href="#">Блюда на пару</a>
+                    <a class="dropdown-item" href="#">Запеканки</a>
+                    <a class="dropdown-item" href="#">Уличная еда</a>
+                    <a class="dropdown-item" href="#">Азия: Китайские блюда</a>
+                    <a class="dropdown-item" href="#">Азия: Японские блюда</a>
+                    <a class="dropdown-item" href="#">Азия: Индийские блюда</a>
+                    <a class="dropdown-item" href="#">Средиземноморская кухня</a>
+                    <a class="dropdown-item" href="#">Итальянская кухня</a>
+                    <a class="dropdown-item" href="#">Французская кухня</a>
+                    <a class="dropdown-item" href="#">Мексиканская кухня</a>
+                    <a class="dropdown-item" href="#">Американская кухня</a>
+                    <a class="dropdown-item" href="#">Русская кухня</a>
+                    <a class="dropdown-item" href="#">Грузинская кухня</a>
+                    <a class="dropdown-item" href="#">Турецкая кухня</a>
+                    <a class="dropdown-item" href="#">Блюда на каждый день</a>
+                    <a class="dropdown-item" href="#">Ужин на скорую руку</a>
+            
+                    <!-- Стрелка вниз -->
+                    <div class="scroll-arrow" style="text-align: center; margin-top: 10px;">
+                        <i class='bx bx-chevron-down'></i>
+                    </div>
+                </div>
+            </div>
+            
+
+            {% if user.is_authenticated %}
+                <a class="nav-link" href="{% url 'create' %}"><i class='bx bxs-plus-circle'></i>Новый рецепт</a>
+                <a class="nav-link" href="{% url 'profile' %}"><i class='bx bx-user'></i>Профиль</a>
+        
+                <!-- Форма для выхода через POST -->
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link btn btn-link" style="padding: 0; border: none; background: none;">
+                        <i class='bx bx-log-out'></i>Выход
+                    </button>
+                </form>
+        
+            {% else %}
+                <a class="nav-link" href="{% url 'login' %}"><i class='bx bx-log-in'></i>Вход</a>
+                <a class="nav-link" href="{% url 'register' %}"><i class="bx bxs-user-plus"></i>Регистрация</a>
+            {% endif %}
+        </div>
+        
+    </div>
+
+    <div class="main-content">
+        <div class="profile">
+            {% if user.is_authenticated %}
+                <img src="{{ user.profile.photo.url }}" alt="{{ user.username }}" class="rounded-circle" width="40" height="40">
+            {% endif %}
+        </div>
+        <header class="mb-4">
+            <h1 class="text-center">Добро пожаловать на кулинарный блог!</h1>
+            <div class="search-bar">
+                <form class="form-inline">
+                    <input type="search" placeholder="Поиск по рецептам" aria-label="Search">
+                    <button type="submit">Найти</button>
+                </form>
+            </div>
+        </header>
+        <main role="main" class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p><a href="{% url 'home' %}" class="text-light">© Кулинарный блог Python Bytes 2024</a></p>
+    </footer>
+
+    <!-- Дополнительные скрипты JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
