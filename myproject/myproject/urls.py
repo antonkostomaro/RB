@@ -6,8 +6,10 @@ from .views import (
     PostCreateView,
     PostUpdateView,
     PostDeleteView,
-    UserPostListView
-
+    UserPostListView,
+    CategoryPostListView,
+    autocomplete_search,
+    search_view  
 )
 from . import views
 from .users import views as user_views
@@ -20,7 +22,9 @@ from django.contrib import admin
 
 #path('', home, name='home'), мой пост
 urlpatterns = [
-    
+    path('search/', search_view, name='search-results'),
+    path('search-autocomplete/', autocomplete_search, name='search-autocomplete'),
+    path('category/<int:category_id>/', CategoryPostListView.as_view(), name='category-posts'),
     path('admin/', admin.site.urls),
     path('register/', register, name='register'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
@@ -34,10 +38,6 @@ urlpatterns = [
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
     path('about/', views.about, name='about'),
     path('register/', user_views.register, name='register'),
-     
-  #  path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
-   # path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
+{% load static %}
   <article class="media content-section">
-    <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
+    {# <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}"> #}
+    
+        <!-- Добавим дефолтное изображение -->
+        <img class="rounded-circle article-img" src="{% static 'default.jpg' %}" alt="Дефолтное изображение">
+
+        
     <div class="media-body">
       <div class="article-metadata">
         <a class="mr-2" href="#">{{ object.author }}</a>
@@ -17,6 +23,7 @@
       </div>
       <h4 class="article-title">{{ object.title }}</h4>
       <p class="article-content">{{ object.content }}</p>
+      <p class="article-content">{{ object.category_id }}</p>
       <p class="mr-2" href="#">{{ object.description }}</p>
     </div>
   </article>

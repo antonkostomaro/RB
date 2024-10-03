@@ -9,11 +9,69 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
+from django.http import JsonResponse
+from django.db.models import Q
 from django.shortcuts import render
-from .models import Post
+from .models import Post, Category
 from django.shortcuts import render, redirect
 from .forms import UserRegistrationForm
 from django.contrib.auth.decorators import login_required
+
+
+def search_view(request):
+    query = request.GET.get('q')
+    if query:
+        posts = Post.objects.filter(
+            Q(title__icontains=query) | Q(category__name__icontains=query)
+        )
+    else:
+        posts = Post.objects.none()
+
+    context = {
+        'posts': posts,
+        'query': query,
+    }
+    return render(request, 'search_results.html', context)
+
+class PostByCategoryView(ListView):
+    model = Post
+    template_name = 'category_posts.html'  # Шаблон для отображения постов по категориям
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        category_name = self.kwargs.get('category_name')
+        return Post.objects.filter(category__name__iexact=category_name) 
+
+def autocomplete_search(request):
+    query = request.GET.get('q')
+    if query:
+        posts = Post.objects.filter(
+            Q(title__icontains=query) | Q(category__name__icontains=query)
+        ).select_related('category')[:10]  # Ограничиваем до 10 результатов
+        results = []
+        for post in posts:
+            results.append({
+                'id': post.id,
+                'title': post.title,
+                'category': post.category.name
+            })
+        return JsonResponse({'results': results})
+    return JsonResponse({'results': []})
+
+
+class CategoryPostListView(ListView):
+    model = Post
+    template_name = 'category_posts.html'  # Укажите шаблон для отображения постов
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        category_id = self.kwargs.get('category_id')  # Получаем id категории из URL
+        return Post.objects.filter(category_id=category_id)  # Фильтруем посты по категории
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = Category.objects.get(id=self.kwargs.get('category_id'))  # Добавляем категорию в контекст
+        return context
 
 def home(request):
     posts = Post.objects.all()  # Получаем все посты
@@ -25,7 +83,7 @@ class PostListView(ListView):
     template_name = 'home.html'  
     context_object_name = 'posts'
     ordering = ['-date']
-    paginate_by = 5
+    paginate_by = 12
    
 
 
@@ -37,7 +95,7 @@ class UserPostListView(ListView):
     model = Post
     template_name = 'user_posts.html'
     context_object_name = 'posts'
-    paginate_by = 5
+    paginate_by = 9
 
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
@@ -50,12 +108,18 @@ class PostDetailView(DetailView):
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'date', 'author', 'description']
+    fields = ['title', 'date', 'author', 'description', 'category']
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Загружаем все категории
+        return context
+    
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-
+    
+     
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post

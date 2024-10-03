@@ -116,3 +116,60 @@ footer a:hover {
   color:#777;
   text-decoration: none;
 }
+/* Анимация для поля поиска */
+.search-bar input[type="search"] {
+  padding: 10px;
+  width: 250px;
+  border: 2px solid #ccc;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.search-bar input[type="search"]:focus {
+  width: 350px;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.8);
+}
+
+/* Анимация для кнопки поиска */
+.search-bar button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-bar button:hover {
+  background-color: #0056b3;
+  box-shadow: 0 0 8px rgba(0, 86, 179, 0.8);
+}
+
+/* Анимация появления постов */
+.post-appear {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* Анимация для карточек постов */
+.media-content {
+  transition: transform 0.3s ease;
+}
+
+.media-content:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}

@@ -1,17 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
-    {% for post in posts %}
-        <article class="media content-section">
-          <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+{% load static %}
+<style>
+  .post-grid {
+    display: flex;
+    flex-wrap: wrap; /* Позволяет элементам переноситься на новую строку */
+    justify-content: space-between; /* Пробел между элементами */
+}
+
+.media {
+    min-height: 300px; /* Установите минимальную высоту карточек */
+    flex: 0 0 30%; /* Каждая карточка занимает примерно 30% ширины родительского контейнера */
+    margin-bottom: 20px; /* Отступ между карточками */
+    border: 1px solid #ccc; /* Обводка для карточек */
+    border-radius: 5px; /* Закругленные углы */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Легкая тень для эффекта */
+    transition: transform 0.3s; /* Анимация для увеличения */
+}
+
+.media:hover {
+    transform: scale(1.05); /* Увеличение при наведении */
+}
+
+</style>
+
+<div class="post-grid">
+  {% for post in posts %}
+      <article class="media content-section">
+          <img class="rounded-circle article-img" src="{% if post.author.profile.image %}{{ post.author.profile.image.url }}{% else %}{% static 'media/default.jpg' %}{% endif %}" alt="Изображение автора">
           <div class="media-body">
-            <div class="article-metadata">
-              <small class="text-muted">{{ post.date|date:"F d, Y" }}</small>
-            </div>
-            <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
-            <p class="article-content">{{ post.content }}</p>
+              <div class="article-metadata">
+                  <small class="text-muted">{{ post.date|date:"F d, Y" }}</small>
+              </div>
+              <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+              <p class="article-content">{{ post.content }}</p>
+              <p class="article-content">{{ post.category }}</p>
           </div>
-        </article>
-    {% endfor %}
+      </article>
+  {% endfor %}
+</div>
     <div class="pagination justify-content-center"> 
     {% if is_paginated %}
 

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Посты в категории: {{ category.name }}</h2>
+
+    {% for post in posts %}
+        <article>
+            <h3><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
+            <p>{{ post.description }}</p>
+        </article>
+    {% empty %}
+        <p>Нет постов в этой категории.</p>
+    {% endfor %}
+{% endblock %}

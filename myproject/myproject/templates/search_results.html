@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+<style>
+    .media {
+        transition: transform 0.3s ease; /* Плавный переход для увеличения */
+    }
+
+    .media:hover {
+        transform: scale(1.05); /* Увеличение на 5% */
+        z-index: 1; /* Подъем карточки выше остальных */
+    }
+</style>
+{% block content %}
+    <h2>Результаты поиска по запросу: "{{ query }}"</h2>
+    {% if posts %}
+    {% for post in posts %}
+    <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+        <div class="media-body">
+            <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content|truncatewords:30 }}</p>
+        </div>
+    </article>
+{% endfor %}
+    {% else %}
+        <p>Ничего не найдено</p>
+    {% endif %}
+{% endblock content %}
